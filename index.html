@@ -11,11 +11,19 @@
   <body>
     <!-- Welcome Screen -->
 
-    <header class="hide"></header>
+    <header class="splash">
+      <div id="center">
+        <h1>Quizly</h1>
+        <h2>Enter Your Name</h2>
+        <input type="text" name="name" id="username" placeholder="Quizly" />
+        <button type="submit" id="start">Get Started</button>
+      </div>
+    </header>
 
     <!-- Main Screen -->
 
-    <main class="">
+    <main class="quiz hide">
+      <h1 id="title">Quizly</h1>
       <section>
         <div id="user">
           <h2 id="greet">Hello , <span id="Username"></span></h2>
@@ -31,20 +39,28 @@
         <div id="container">
           <div id="questionContainer">
             <h2 id="question">
-              Which of the following scoping type does JavaScript use?
+              Lorem, ipsum dolor sit amet consectetur adipisicing elit.
             </h2>
           </div>
           <div class="optionContainer">
-            <p class="options">Hyper Text Transmission Protocol Secure</p>
+            <p class="options">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            </p>
           </div>
           <div class="optionContainer">
-            <p class="options">Hyper Text Transmission Protocol Secure</p>
+            <p class="options">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            </p>
           </div>
           <div class="optionContainer">
-            <p class="options">Hyper Text Transmission Protocol Secure</p>
+            <p class="options">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            </p>
           </div>
           <div class="optionContainer">
-            <p class="options">Hyper Text Transmission Protocol Secure</p>
+            <p class="options">
+              Lorem ipsum dolor sit amet consectetur adipisicing elit.
+            </p>
           </div>
         </div>
         <div id="btn">
@@ -57,6 +73,10 @@
 
     <!-- <div id="result"></div> -->
 
-    <p id="per">Made With ❤️ - Uttkarsh Gairola</p>
+    <!-- Error Message -->
+    <div class="error center">
+      <p>Enter Your name to continue</p>
+    </div>
+    <p class="credit">Made With ❤️ - Uttkarsh Gairola</p>
   </body>
 </html>
