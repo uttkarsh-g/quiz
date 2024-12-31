@@ -1,4 +1,4 @@
-const questions = {
+const questionsAndAnswers = {
   q1: {
     q: 'What is the full form of HTML? ',
     o: [
