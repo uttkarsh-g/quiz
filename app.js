@@ -26,28 +26,28 @@ const questionsAndAnswers = {
   },
   q4: {
     q: 'Which HTML tag is used to define an internal style sheet?',
-    o: ['<css>', '<script>', '<style>', 'link'],
+    o: ['<css>', '<script>', '<style>', '<link>'],
     a: '<style>',
   },
   q5: {
-    q: '',
-    o: [, , , ,],
-    a: '',
+    q: 'What is the recommended file format for a favicon in HTML?',
+    o: ['.ico', '.png', '.gif', '.webp'],
+    a: '.ico',
   },
   q6: {
-    q: '',
-    o: [, , , ,],
-    a: '',
+    q: 'Which of the following is not the property of the CSS box model?',
+    o: ['margin', 'color', 'width', 'height'],
+    a: 'color',
   },
   q7: {
-    q: '',
-    o: [, , , ,],
-    a: '',
+    q: 'Which of the following selector is used to selects siblings?',
+    o: ['::after', 'E ~ F', ':checked', 'E[attr^=value]'],
+    a: 'E ~ F',
   },
   q8: {
-    q: '',
-    o: [, , , ,],
-    a: '',
+    q: ' Which of the following Module is not available in CSS3.',
+    o: ['DOMs', 'Fonts', 'Backgrounds and Borders', 'Color'],
+    a: 'DOMs',
   },
   q9: {
     q: 'What are the different types of errors in JavaScript?',
@@ -91,107 +91,134 @@ const questionsAndAnswers = {
   },
 };
 
-const getStarted = document.querySelector('#start');
-const userNameInput = document.querySelector('#username');
-const userName = document.querySelector('#Username');
-const main = document.querySelector('.splash');
-const quiz = document.querySelector('.quiz');
-const b = document.querySelector('#icons');
-const vU = document.querySelector('.vu');
-const vD = document.querySelector('.vd');
-const error = document.querySelector('.error');
-const credit = document.querySelector('.credit');
-const sec = document.querySelector('#tS');
-const nextQuestion = document.querySelector('.next');
-const question = document.querySelector('#question');
-const questionNumber = document.querySelector('#qN');
-const options = document.querySelectorAll('.options');
-let seconds = 30;
-let timerStop;
-let questionsCount = 1;
-sec.innerText = seconds;
-let result = 0;
+const welcomeScreen = document.querySelector('.splash');
+const quizScreen = document.querySelector('.quiz');
+const resultScreen = document.querySelector('.result');
+const getStartedButton = document.querySelector('#start');
+const nextQuestionButton = document.querySelector('.next');
+const resultButton = document.querySelector('.finish');
+const usernameTnput = document.querySelector('#username');
+const usernameValue = document.querySelector('#Username');
+const welcomeError = document.querySelector('.error');
+const musicIcon = document.querySelector('#icons');
+const volumeDown = document.querySelector('.vd');
+const volumeUp = document.querySelector('.vu');
+const timeSec = document.querySelector('#tS');
+const questionCount = document.querySelector('#qN');
+const currentQuestion = document.querySelector('#question');
+const allOptions = document.querySelectorAll('.options');
 
-function countDown() {
-  timerStop = setInterval(() => {
-    seconds--;
-    if (seconds < 10) {
-      sec.innerText = '0' + seconds;
+let timer = 30;
+let stop;
+timeSec.innerText = timer;
+const questionKey = Object.keys(questionsAndAnswers);
+let questions;
+let questionNumber = 0;
+let quizResult = 0;
+
+//  Splash screen
+getStartedButton.addEventListener('click', (e) => {
+  e.stopPropagation();
+  if (usernameTnput.value !== '') {
+    usernameValue.innerText = usernameTnput.value;
+    usernameTnput.value = '';
+    welcomeScreen.classList.add('hide');
+    quizScreen.classList.remove('hide');
+  } else {
+    welcomeError.classList.add('errorvisible');
+  }
+  countdown();
+  questionsUpdate();
+});
+usernameTnput.addEventListener('focus', () => {
+  welcomeError.classList.remove('errorvisible');
+});
+
+// Quiz screen
+
+musicIcon.addEventListener('click', (e) => {
+  e.stopPropagation();
+  volumeUp.classList.toggle('hide');
+  volumeDown.classList.toggle('hide');
+});
+
+function countdown() {
+  stop = setInterval(() => {
+    timer--;
+    if (timer > 9) {
+      timeSec.innerText = timer;
     } else {
-      sec.innerText = seconds;
+      timeSec.innerText = '0' + timer;
     }
-    if (seconds === 0) {
-      clearInterval(timerStop);
-      nextQuestion.classList.add('see');
+    if (timer === 0) {
+      clearInterval(stop);
+      allOptions.forEach((option) => {
+        if (option.innerText === questions.a) {
+          option.classList.add('right');
+          close();
+        }
+      });
+      if (questionNumber === 15) {
+        resultButton.classList.remove('hide');
+        nextQuestionButton.classList.add('hide');
+      } else {
+        nextQuestionButton.classList.remove('hide');
+      }
     }
   }, 1000);
 }
-const questionList = Object.keys(questionsAndAnswers);
-let questionChange = 0;
-let qS;
-function questions() {
-  const q = questionList[questionChange];
-  qS = questionsAndAnswers[q];
-  question.innerText = qS.q;
-  options.forEach((o, i) => {
-    o.innerText = qS.o[i];
+function questionsUpdate() {
+  const qN = questionKey[questionNumber];
+  questions = questionsAndAnswers[qN];
+  currentQuestion.innerText = questions.q;
+  allOptions.forEach((options, index) => {
+    options.innerText = questions.o[index];
   });
-  questionNumber.innerText = questionsCount;
-  questionsCount++;
+  questionNumber++;
+  questionCount.innerText = questionNumber;
 }
 
-options.forEach((o, i) => {
-  o.addEventListener('click', (element) => {
-    clearInterval(timerStop);
-    if (element.target.innerText === qS.a) {
+allOptions.forEach((optionsCheck) => {
+  optionsCheck.addEventListener('click', (element) => {
+    element.stopPropagation();
+    if (element.target.innerText === questions.a) {
       element.target.parentElement.classList.add('right');
-      result++;
+      quizResult++;
     } else {
       element.target.parentElement.classList.add('wrong');
-      close();
     }
-    nextQuestion.classList.add('see');
+    close();
+    clearInterval(stop);
+    if (questionNumber === 15) {
+      resultButton.classList.remove('hide');
+      nextQuestionButton.classList.add('hide');
+    } else {
+      nextQuestionButton.classList.remove('hide');
+    }
   });
 });
+
 function close() {
-  options.forEach((e) => {
-    e.parentElement.classList.add('close');
+  allOptions.forEach((element) => {
+    element.parentElement.classList.add('close');
   });
 }
-nextQuestion.addEventListener('click', (e) => {
+
+nextQuestionButton.addEventListener('click', (e) => {
   e.stopPropagation();
-  questionChange = (questionChange + 1) % questionList.length;
-  questions();
-  seconds = 30;
-  countDown();
-  options.forEach((e) => {
+  timer = 30;
+  countdown();
+  questions = questions + 1;
+  questionsUpdate();
+  allOptions.forEach((e) => {
     e.parentElement.classList.remove('right', 'wrong', 'close');
   });
-  nextQuestion.classList.remove('see');
+  nextQuestionButton.classList.remove('see');
+  nextQuestionButton.classList.add('hide');
 });
 
-getStarted.addEventListener('click', (e) => {
+resultButton.addEventListener('click', (e) => {
   e.stopPropagation();
-  if (userNameInput.value !== '') {
-    userName.innerText = userNameInput.value;
-    userNameInput.value = '';
-    main.classList.add('hide');
-    quiz.classList.remove('hide');
-  } else {
-    error.classList.add('up');
-    credit.classList.add('black');
-  }
-  countDown();
-  questions();
-});
-
-userNameInput.addEventListener('focus', () => {
-  error.classList.remove('up');
-  credit.classList.remove('black');
-});
-
-b.addEventListener('click', (e) => {
-  e.stopPropagation();
-  vU.classList.toggle('hide');
-  vD.classList.toggle('hide');
+  quizScreen.classList.add('hide');
+  resultScreen.classList.remove('hide');
 });
