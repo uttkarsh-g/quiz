@@ -107,7 +107,12 @@ const timeSec = document.querySelector('#tS');
 const questionCount = document.querySelector('#qN');
 const currentQuestion = document.querySelector('#question');
 const allOptions = document.querySelectorAll('.options');
-
+const forverAudio = document.querySelector('#audio');
+const rightAnswerAudio = document.querySelector('#rightaudio');
+const wrongAnswerAudio = document.querySelector('#wrongaudio');
+forverAudio.volume = 0.2;
+wrongAnswerAudio.volume = 0.2;
+// rightAnswerAudio.volume = 0.2;
 let timer = 30;
 let stop;
 timeSec.innerText = timer;
@@ -140,6 +145,15 @@ musicIcon.addEventListener('click', (e) => {
   e.stopPropagation();
   volumeUp.classList.toggle('hide');
   volumeDown.classList.toggle('hide');
+  if (volumeUp.classList.contains('hide')) {
+    forverAudio.volume = 0;
+    rightAnswerAudio.volume = 0;
+    wrongAnswerAudio.volume = 0;
+  } else {
+    forverAudio.volume = 0.2;
+    wrongAnswerAudio.volume = 0.2;
+    // rightAnswerAudio.volume = 0.2;
+  }
 });
 
 function countdown() {
@@ -183,9 +197,11 @@ allOptions.forEach((optionsCheck) => {
     element.stopPropagation();
     if (element.target.innerText === questions.a) {
       element.target.parentElement.classList.add('right');
+      rightAnswerAudio.play();
       quizResult++;
     } else {
       element.target.parentElement.classList.add('wrong');
+      wrongAnswerAudio.play();
     }
     close();
     clearInterval(stop);
