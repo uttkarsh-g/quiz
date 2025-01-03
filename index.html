@@ -3,13 +3,42 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="shortcut icon"
+      href="Assets/icons/favicon.ico"
+      type="image/x-icon"
+    />
+    <link
+      rel="shortcut icon"
+      href="Assets/icons/favicon-32x32.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="shortcut icon"
+      href="Assets/icons/favicon-16x16.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="shortcut icon"
+      href="Assets/icons/apple-touch-icon.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="shortcut icon"
+      href="Assets/icons/android-chrome-512x512.png"
+      type="image/x-icon"
+    />
+    <link
+      rel="shortcut icon"
+      href="Assets/icons/android-chrome-192x192.png"
+      type="image/x-icon"
+    />
     <link rel="stylesheet" href="style.css" />
     <script src="app.js" defer></script>
     <title>Quizly</title>
   </head>
   <body>
     <!-- Welcome Screen -->
-
     <header class="splash">
       <div id="center">
         <div class="image center">
@@ -19,6 +48,9 @@
           <h2 id="entryHead">Enter Your Name</h2>
           <input type="text" name="name" id="username" placeholder="Quizly" />
           <button type="submit" id="start">Get Started</button>
+        </div>
+        <div class="preresult hide">
+          <p>Your previous result is - <span id="showresult"></span> / 15</p>
         </div>
       </div>
     </header>
@@ -67,13 +99,39 @@
 
     <!-- Result Screen -->
 
-    <div class="result hide"></div>
+    <div class="result hide">
+      <div id="center">
+        <div class="image center">
+          <img src="Assets/smalllogo.png" alt="Quizly Logo" />
+        </div>
+        <h2 id="endresult">
+          Dear <span id="usernamename"></span>, Your score is
+          <span id="resulValue"></span> / 15
+        </h2>
+        <div class="feedback">
+          <p class="compli bad hide">
+            Oh no! This is a poor score. You need to study harder.
+          </p>
+          <p class="compli average hide">
+            Hmm, this is an average score. Keep working, study more.
+          </p>
+          <p class="compli good hide">
+            Wow! This is a good score. Just a bit more effort to make it better.
+          </p>
+          <p class="compli prefect hide">
+            Perfect! This is the mark of a genius! Keep up the excellent work.
+          </p>
+        </div>
+        <button id="tryagain">Try Again</button>
+      </div>
+    </div>
 
     <!-- Error Message -->
 
     <div class="error center">
       <p>Enter Your name to continue</p>
     </div>
+
     <div class="audio">
       <audio
         src="Assets/game.mp3"

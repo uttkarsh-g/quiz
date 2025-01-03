@@ -94,11 +94,16 @@ const questionsAndAnswers = {
 const welcomeScreen = document.querySelector('.splash');
 const quizScreen = document.querySelector('.quiz');
 const resultScreen = document.querySelector('.result');
+const preResult = document.querySelector('.preresult');
+const showResult = document.querySelector('#showresult');
 const getStartedButton = document.querySelector('#start');
 const nextQuestionButton = document.querySelector('.next');
 const resultButton = document.querySelector('.finish');
+const tryAgainButton = document.querySelector('#tryagain');
 const usernameTnput = document.querySelector('#username');
 const usernameValue = document.querySelector('#Username');
+const usernameValueResult = document.querySelector('#usernamename');
+const finalResult = document.querySelector('#resulValue');
 const welcomeError = document.querySelector('.error');
 const musicIcon = document.querySelector('#icons');
 const volumeDown = document.querySelector('.vd');
@@ -110,23 +115,42 @@ const allOptions = document.querySelectorAll('.options');
 const forverAudio = document.querySelector('#audio');
 const rightAnswerAudio = document.querySelector('#rightaudio');
 const wrongAnswerAudio = document.querySelector('#wrongaudio');
+const badScore = document.querySelector('.bad');
+const averageScore = document.querySelector('.average');
+const goodScore = document.querySelector('.good');
+const perfectScore = document.querySelector('.prefect');
+let player;
 forverAudio.volume = 0.2;
 wrongAnswerAudio.volume = 0.2;
-// rightAnswerAudio.volume = 0.2;
 let timer = 30;
 let stop;
 timeSec.innerText = timer;
 const questionKey = Object.keys(questionsAndAnswers);
 let questions;
 let questionNumber = 0;
-let quizResult = 0;
+let quizResult = localStorage.getItem('result') || 0;
+
+if (quizResult > 0) {
+  preResult.classList.remove('hide');
+  showResult.innerText = quizResult;
+}
+
+window.addEventListener('load', () => {
+  usernameTnput.value = '';
+});
+
+function capLetter(username) {
+  return username.charAt(0).toUpperCase() + username.slice(1);
+}
 
 //  Splash screen
 getStartedButton.addEventListener('click', (e) => {
   e.stopPropagation();
-  if (usernameTnput.value !== '') {
-    usernameValue.innerText = usernameTnput.value;
-    usernameTnput.value = '';
+  player = usernameTnput.value;
+  player = capLetter(player);
+  if (player !== '') {
+    usernameValue.innerText = player;
+    player = '';
     welcomeScreen.classList.add('hide');
     quizScreen.classList.remove('hide');
   } else {
@@ -134,6 +158,8 @@ getStartedButton.addEventListener('click', (e) => {
   }
   countdown();
   questionsUpdate();
+  quizResult = 0;
+  localStorage.removeItem('result');
 });
 usernameTnput.addEventListener('focus', () => {
   welcomeError.classList.remove('errorvisible');
@@ -146,13 +172,13 @@ musicIcon.addEventListener('click', (e) => {
   volumeUp.classList.toggle('hide');
   volumeDown.classList.toggle('hide');
   if (volumeUp.classList.contains('hide')) {
-    forverAudio.volume = 0;
+    forverAudio.pause();
     rightAnswerAudio.volume = 0;
     wrongAnswerAudio.volume = 0;
   } else {
-    forverAudio.volume = 0.2;
+    forverAudio.play();
+    rightAnswerAudio.volume = 0.2;
     wrongAnswerAudio.volume = 0.2;
-    // rightAnswerAudio.volume = 0.2;
   }
 });
 
@@ -168,7 +194,7 @@ function countdown() {
       clearInterval(stop);
       allOptions.forEach((option) => {
         if (option.innerText === questions.a) {
-          option.classList.add('right');
+          option.parentElement.classList.toggle('right');
           close();
         }
       });
@@ -237,4 +263,37 @@ resultButton.addEventListener('click', (e) => {
   e.stopPropagation();
   quizScreen.classList.add('hide');
   resultScreen.classList.remove('hide');
+  usernameValueResult.innerText = player;
+  finalResult.innerText = quizResult;
+  localStorage.setItem('result', quizResult);
+  if (quizResult <= 5) {
+    badScore.classList.remove('hide');
+    averageScore.classList.add('hide');
+    goodScore.classList.add('hide');
+    perfectScore.classList.add('hide');
+  } else if (quizResult > 6 && quizResult <= 10) {
+    badScore.classList.add('hide');
+    averageScore.classList.remove('hide');
+    goodScore.classList.add('hide');
+    perfectScore.classList.add('hide');
+  } else if (quizResult > 11 && quizResult <= 14) {
+    badScore.classList.add('hide');
+    averageScore.classList.add('hide');
+    goodScore.classList.remove('hide');
+    perfectScore.classList.add('hide');
+  } else if (quizResult) {
+    badScore.classList.add('hide');
+    averageScore.classList.add('hide');
+    goodScore.classList.add('hide');
+    perfectScore.classList.remove('hide');
+  }
+});
+tryAgainButton.addEventListener('click', (e) => {
+  resultScreen.classList.add('hide');
+  welcomeScreen.classList.remove('hide');
+  questionNumber = 0;
+  allOptions.forEach((e) => {
+    e.parentElement.classList.remove('right', 'wrong', 'close');
+  });
+  resultButton.classList.add('hide');
 });
